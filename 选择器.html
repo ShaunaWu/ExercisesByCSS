@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>元素选择器</title>
+    <style type="text/css">
+        .u1 li{
+            border: 1px solid blue;
+        }
+        .u2>li{
+            border: 1px solid blue;
+        }
+        .u3 li+li{
+            background: yellow;
+        }
+        .u4 .firstli~li{
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+     <h6>第二个ul</h6>
+    <ul class="u1">
+        <li>我是li1</li>
+        <li>我是li2</li>
+        <li>我是li3</li>
+        <li>我是li4</li>
+        <li>
+            <ul>
+                <li>我是第二级别的li</li>
+                <li>我是第二级别的li</li>
+                <li>我是第二级别的li</li>
+            </ul>
+        </li>
+    </ul>
+    <h6>第二个ul</h6>
+    <ul class="u2">
+        <li>我是li1</li>
+        <li>我是li2</li>
+        <li>我是li3</li>
+        <li>我是li4</li>
+        <li>
+            <ul>
+                <li>我是第二级别的li</li>
+                <li>我是第二级别的li</li>
+                <li>我是第二级别的li</li>
+            </ul>
+        </li>
+    </ul>
+    <h6>第三个ul</h6>
+    <ul class="u3">
+        <li>我是li1</li>
+        <li>我是li2</li>
+        <li>我是li3</li>
+        <li>我是li4</li>
+        <li>
+            <ul>
+                <li>我是第二级别的li</li>
+                <li>我是第二级别的li</li>
+                <li>我是第二级别的li</li>
+            </ul>
+        </li>
+    </ul>
+    <h6>第四个ul</h6>
+    <ul class="u4">
+        <li class="firstli">我是li1</li>
+        <li>我是li2</li>
+        <li>我是li3</li>
+        <li>我是li4</li>
+        <li>
+            <ul>
+                <li>我是第二级别的li</li>
+                <li>我是第二级别的li</li>
+                <li>我是第二级别的li</li>
+            </ul>
+        </li>
+    </ul>
+</body>
+</html>

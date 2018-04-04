@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>鼠标滑动泡泡</title>
+    <style type="text/css">
+    	#canvas{
+    		background-color: #000;
+    	}
+    </style>
+</head>
+
+<body>
+<canvas id="canvas"></canvas>
+
+<script type="text/javascript">
+
+	var c = document.getElementById('canvas');
+	var ctx = c.getContext("2d");
+    var x = window.innerWidth;
+    var y = window.innerHeight;
+    console.log(x+","+y);	
+	c.width = x;
+	c.height = y;
+
+	window.onresize=function(){
+		var x = window.innerWidth;
+        var y = window.innerHeight;
+        c.width = x;
+	    c.height = y;	    
+	}
+
+var ballList = [];
+
+function Ball(width, height){
+	this.width = width;
+	this.height = height;
+	this.r = 40;
+	this.o = 0.9;
+	this.dx = Math.random()*10-2;
+	this.dy = Math.random()*10-2;
+	this.color = '#' + Math.floor(Math.random()*0xffffff).toString(16);
+	//console.log(this.color);
+	ballList.push(this);
+}
+
+Ball.prototype={
+	update:function(){
+		this.width += this.dx;
+		this.height += this.dy;
+		this.r--;
+		this.o -= 0.1;
+		if(this.r<0)
+			this.r = 0;
+	},
+	print:function(){
+		ctx.beginPath();
+		ctx.fillStyle = this.color;
+		ctx.globalAlpha = this.o;
+		ctx.arc(this.width, this.height, this.r, 0, 2*Math.PI, true);
+		ctx.fill();
+	}
+}
+
+canvas.onmousemove = function(event){
+	new Ball(event.offsetX, event.offsetY);
+}
+
+setInterval(function(){
+	ctx.clearRect(0,0,1200,1000);
+	for(var i = 0; i < ballList.length; i++){
+		ballList[i].update();
+		ballList[i].print();		
+	}
+},20);
+
+/*
+function render(){		
+	ctx.clearRect(0,0,1200,1000);
+	ballList[0].update();
+	ballList[0].print();	
+	requestAnimationFrame(render);
+}
+
+render();*/
+	
+</script>
+</body>
+
+
+</html>

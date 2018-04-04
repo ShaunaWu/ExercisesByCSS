@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>水平瀑布流及懒加载</title>
+	<meta charset="utf-8"><!--页面编码格式-->
+	<meta name="Keywords" content="">
+	<meta name="Description" content="">
+	<style type="text/css">
+		body,h1{
+			margin: 0;
+		}
+		h1{
+			text-align: center;
+		}
+		.box{
+			width: 1200px;
+			margin: 0 auto;
+			border: 1px solid black;
+			overflow: hidden;/*BFC*/
+		}
+		.box img{
+			float: left;/*浮动*/
+			/*display: block;*/
+			margin: 5px;
+		}
+	</style>
+</head>
+<body>
+	<h1>水平瀑布流</h1>
+	<div class="box"></div>
+</body>
+<script type="text/javascript">
+	
+	var box = document.querySelector('.box');/*选中名叫box的盒子*/
+	var imglist = [];
+	var count = 0;
+	var loaded = 20; // 第一次加载多少张图片
+	function initimg(i) {
+		//加载单张图片设置宽高比，判断是否完成加载，做整理图片
+		var img = document.createElement('img');
+		img.src = 'images/pic ('+i+').jpg';
+		imglist.push(img); //按征程顺序放到数组中
+		img.onload = function(){
+			//console.log(img.width,img.height);
+			//console.log(img);
+			count++;
+			//img.pst = img.width/img.height;//pst=>百分比，元素的私有属性，不允许直接设置在我们图片上，对象污染
+			Object.defineProperty(img, 'pst',{
+				value: img.width/img.height
+			})  //这个属性是不允许修改的
+			if(count === loaded){
+				console.log(1);
+				format();
+			}			
+		}		
+		box.appendChild(img);
+	}
+
+	for(var i = 1; i < loaded+1; i++){
+		initimg(i);
+	}
+	
+	function format(){//整理已经加载好的imglist，
+		var line = Math.floor(loaded/4);
+		for(var i = 0; i < line; i++){
+			var s = 0;
+			for(var j = 0; j < 4; j++){
+				//第i行第j个元素i*4+j就是当前我所循环对应的图片
+				s+=imglist[i*4+j].pst*300
+			}
+			console.log(s);
+			var ch = (1200-40)*300/s;
+			console.log(ch);
+			for(var j = 0;j<4;j++){
+				imglist[i*4+j].style.width = ch*imglist[i*4+j].pst+'px';
+				imglist[i*4+j].style.height = ch + 'px';
+			}
+		}
+	}
+
+	window.onscroll = function(){
+		var scroll = document.documentElement.scrollTop;
+		var screen = window.innerHeight;
+		var offset = box.offsetTop;
+		var ogbHeight = box.offsetHeight;
+		if(ogbHeight+offset-scroll-screen < 20){
+			add();
+		}
+	}
+
+	function add(){
+		loaded += 20;
+		for(var i = 1; i < 21; i++){
+			initimg(i);
+		}
+	}
+
+</script>
+<!--
+	1、通常情况下高度是由里面的元素撑开的
+
+	2、图片（文本）之间的间隙是怎么来的
+	    水平间距：空格解析
+	    竖直方向间隙：文字对齐方向的问题：基线对齐 font-size: 0;
+
+	文本特点：对空格有解析，对换行符有解析
+
+	querySelector 单个元素，不是返回类数值  性能略差 (CSS选择器选中方式)
+	    如var box = document.querySelector('body h1');
+	get    最优性能
+	$()   性能差
+
+	水平瀑布流特点：
+		1、单行高度固定
+		2、左右对齐（单行定宽）
+		3、图片比例不会变形
+
+	开发流程：
+	    1、动态的添加图片
+	    2、整理图片
+	    	2.1 知道图片的宽高，计算宽高比
+	    	2.2 整理图片的宽度和高度
+	    		什么时候去整理？
+	    			所有图片加载完成的时候完成整理
+	    			计数：每完成加载一次的时候就计数
+	    		整理成什么样？
+	    			水平瀑布流
+	    			每行4张图片：单行每一张图片 高度是确定的
+	    				将四张图片以等高（300）规划，获取所有图片的宽度和S
+
+
+	浏览器加载渲染原理：
+		1、添加不等于加载；异步（玄学加载）（解决异步用毁掉或触发），触发：当某一个条件满足的时候才去做。。。img.onload
+-->
+</html>
